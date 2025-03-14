@@ -19,8 +19,8 @@ class BudgetSummaryScreen extends StatelessWidget {
           children: [
             Container(
               color: Colors.blue[200],
-              padding: EdgeInsets.all(16),
-              child: Row(
+              padding: const EdgeInsets.all(16),
+              child: const Row(
                 children: [
                   Icon(Icons.arrow_back),
                   SizedBox(width: 10),
@@ -34,7 +34,7 @@ class BudgetSummaryScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     SizedBox(
@@ -77,17 +77,17 @@ class BudgetSummaryScreen extends StatelessWidget {
                 ),
               ),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.business),
                       title: Text('Item'),
                       trailing: Text('100/200'),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.business),
                       title: Text('Item'),
                       trailing: Text('19/29'),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.business),
                       title: Text('Item'),
                       trailing: Text(

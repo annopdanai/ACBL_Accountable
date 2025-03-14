@@ -1,11 +1,10 @@
-import 'package:accountable/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   final String detailsPath;
 
-  const HomePage({Key? key, required this.detailsPath}) : super(key: key);
+  const HomePage({super.key, required this.detailsPath});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,17 +13,17 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 // Navigate to previous date
               },
             ),
-            Text(
+            const Text(
               'Dec 24',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
+              icon: const Icon(Icons.arrow_forward_ios),
               onPressed: () {
                 // Navigate to next date
               },
@@ -39,20 +38,20 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.blue[900],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
+                child: const Text(
                   '16,938.81',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDayExpense(
                 day: 'Tue 17',
                 totalExpense: '90,299',
@@ -88,7 +87,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDayExpense(
                 day: 'Mon 16',
                 totalExpense: '320',
@@ -116,7 +115,7 @@ class HomePage extends StatelessWidget {
     required List<Widget> expenses,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.blue[800],
         borderRadius: BorderRadius.circular(8),
@@ -129,20 +128,20 @@ class HomePage extends StatelessWidget {
             children: [
               Text(
                 day,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
               Row(
                 children: [
-                  Icon(Icons.arrow_upward, size: 16, color: Colors.white),
+                  const Icon(Icons.arrow_upward, size: 16, color: Colors.white),
                   Text(
                     'Expense $totalExpense',
-                    style: TextStyle(fontSize: 14, color: Colors.white),
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           ...expenses,
         ],
       ),
@@ -157,8 +156,8 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.blue[700],
         borderRadius: BorderRadius.circular(8),
@@ -169,19 +168,19 @@ class HomePage extends StatelessWidget {
               icon: Icon(icon),
               onPressed: () => context.go(detailsPath),
             ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: TextStyle(fontSize: 16, color: Colors.white)),
+                    style: const TextStyle(fontSize: 16, color: Colors.white)),
                 Text(subtitle,
-                    style: TextStyle(fontSize: 14, color: Colors.white)),
+                    style: const TextStyle(fontSize: 14, color: Colors.white)),
               ],
             ),
           ),
-          Text(amount, style: TextStyle(fontSize: 16, color: Colors.white)),
+          Text(amount, style: const TextStyle(fontSize: 16, color: Colors.white)),
         ],
       ),
     );

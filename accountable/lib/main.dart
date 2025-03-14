@@ -59,7 +59,7 @@ final goRouter = GoRouter(
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: FileUploadScreen(),
               ),
-              routes: [
+              routes: const [
                 // GoRoute(
                 //   path: 'details',
                 //   builder: (context, state) => const DetailsScreen(label: 'B'),
@@ -228,8 +228,8 @@ class DetailsScreen extends StatefulWidget {
   /// Constructs a [DetailsScreen].
   const DetailsScreen({
     required this.label,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The label to display in the center of the screen.
   final String label;

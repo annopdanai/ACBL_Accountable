@@ -19,12 +19,12 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
         
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade700,
                 borderRadius: BorderRadius.circular(10),
@@ -32,7 +32,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Automatic Upload',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
@@ -48,38 +48,38 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 50),
-            Icon(
+            const SizedBox(height: 50),
+            const Icon(
               Icons.cloud_upload,
               color: Colors.white,
               size: 80,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueGrey.shade600,
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'SELECT FILE',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey.shade500,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Add a transaction manually',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
