@@ -78,10 +78,10 @@ final goRouter = GoRouter(
                 child: BudgetSummaryScreen(),
               ),
               routes: [
-                GoRoute(
-                  path: 'details',
-                  builder: (context, state) => const DetailsScreen(label: 'B'),
-                ),
+                // GoRoute(
+                //   path: 'details',
+                //   builder: (context, state) => const DetailsScreen(label: 'B'),
+                // ),
               ],
             ),
           ],
@@ -135,20 +135,14 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < 450) {
+     
         return ScaffoldWithNavigationBar(
           body: navigationShell,
           selectedIndex: navigationShell.currentIndex,
           onDestinationSelected: _goBranch,
         );
-      } else {
-        return ScaffoldWithNavigationRail(
-          body: navigationShell,
-          selectedIndex: navigationShell.currentIndex,
-          onDestinationSelected: _goBranch,
-        );
-      }
-    });
+      } 
+    );
   }
 }
 
@@ -180,92 +174,5 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
   }
 }
 
-class ScaffoldWithNavigationRail extends StatelessWidget {
-  const ScaffoldWithNavigationRail({
-    super.key,
-    required this.body,
-    required this.selectedIndex,
-    required this.onDestinationSelected,
-  });
-  final Widget body;
-  final int selectedIndex;
-  final ValueChanged<int> onDestinationSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            selectedIndex: selectedIndex,
-            onDestinationSelected: onDestinationSelected,
-            labelType: NavigationRailLabelType.all,
-            destinations: const <NavigationRailDestination>[
-              NavigationRailDestination(
-                label: Text('Section A'),
-                icon: Icon(Icons.home),
-              ),
-              NavigationRailDestination(
-                label: Text('Section B'),
-                icon: Icon(Icons.settings),
-              ),
-            ],
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          // This is the main content.
-          Expanded(
-            child: body,
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 
-/// The details screen for either the A or B screen.
-class DetailsScreen extends StatefulWidget {
-  /// Constructs a [DetailsScreen].
-  const DetailsScreen({
-    required this.label,
-    super.key,
-  });
-
-  /// The label to display in the center of the screen.
-  final String label;
-
-  @override
-  State<StatefulWidget> createState() => DetailsScreenState();
-}
-
-/// The state for DetailsScreen
-class DetailsScreenState extends State<DetailsScreen> {
-  int _counter = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Details Screen - ${widget.label}'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text('Details for ${widget.label} - Counter: $_counter',
-                style: Theme.of(context).textTheme.titleLarge),
-            const Padding(padding: EdgeInsets.all(4)),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _counter++;
-                });
-              },
-              child: const Text('Increment counter'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
