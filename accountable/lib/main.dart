@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'firebase_options.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorHomePageKey = GlobalKey<NavigatorState>(debugLabel: 'HomePage');
-final _shellNavigatorNewPageKey = GlobalKey<NavigatorState>(debugLabel: 'NewPage');
-final _shellNavigatorSummaryPageKey = GlobalKey<NavigatorState>(debugLabel: 'SummaryPage');
-
-
+final _shellNavigatorHomePageKey =
+    GlobalKey<NavigatorState>(debugLabel: 'HomePage');
+final _shellNavigatorNewPageKey =
+    GlobalKey<NavigatorState>(debugLabel: 'NewPage');
+final _shellNavigatorSummaryPageKey =
+    GlobalKey<NavigatorState>(debugLabel: 'SummaryPage');
 
 final goRouter = GoRouter(
   initialLocation: '/HomePage',
@@ -35,7 +38,7 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/HomePage',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: HomePage( detailsPath: '/HomePage/transaction_details'),
+                child: HomePage(detailsPath: '/HomePage/transaction_details'),
               ),
               routes: [
                 GoRoute(
@@ -53,7 +56,6 @@ final goRouter = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigatorNewPageKey,
           routes: [
-            
             GoRoute(
               path: '/UploadPage',
               pageBuilder: (context, state) => const NoTransitionPage(
@@ -71,7 +73,6 @@ final goRouter = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigatorSummaryPageKey,
           routes: [
-            
             GoRoute(
               path: '/SummaryPage',
               pageBuilder: (context, state) => const NoTransitionPage(
@@ -86,7 +87,6 @@ final goRouter = GoRouter(
             ),
           ],
         ),
-        
       ],
     ),
   ],
@@ -135,14 +135,12 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-     
-        return ScaffoldWithNavigationBar(
-          body: navigationShell,
-          selectedIndex: navigationShell.currentIndex,
-          onDestinationSelected: _goBranch,
-        );
-      } 
-    );
+      return ScaffoldWithNavigationBar(
+        body: navigationShell,
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: _goBranch,
+      );
+    });
   }
 }
 
@@ -173,6 +171,3 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
     );
   }
 }
-
-
-

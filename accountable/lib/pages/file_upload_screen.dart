@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 class FileUploadScreen extends StatefulWidget {
   const FileUploadScreen({super.key});
@@ -16,7 +17,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
       backgroundColor: Colors.blueGrey.shade900,
       appBar: AppBar(
         backgroundColor: Colors.blue.shade200,
-        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -24,7 +24,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade700,
                 borderRadius: BorderRadius.circular(10),
@@ -59,7 +60,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueGrey.shade600,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -74,7 +76,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey.shade500,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
