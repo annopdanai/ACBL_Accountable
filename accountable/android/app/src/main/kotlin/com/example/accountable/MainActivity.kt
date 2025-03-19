@@ -1,4 +1,4 @@
-package com.example.accountable
+package com.spiralnuggets.kanade
 
 import io.flutter.embedding.android.FlutterActivity
 
