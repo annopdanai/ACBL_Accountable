@@ -1,11 +1,16 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart'; // PROVIDER REQUIRES MATERIAL???? WHY????
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // for the firebase stuff
+import 'firebase_options.dart'; // for the firebase stuff
+
+FirebaseFirestore firebaseDB = FirebaseFirestore.instance;
 
 // stolen from Mafuyu. Shut up.
 // half the codebase is shared between Kanade and Mafuyu anyways.
 // If there's an another version, it's gonna be called Ena or Mizuki or something.
 class LocalDB {
+  // if you touch this make sure to label the commit with BREAKING CHANGE
   static final LocalDB _instance = LocalDB._internal(); // this shi a singleton
   factory LocalDB() => _instance;
   LocalDB._internal();
@@ -136,8 +141,23 @@ class TransList {
     transactions.remove(transaction);
   }
 
-  void generateInsights() {
-    // TODO: make it so that it returns smth for the pie chart
+  Map<TransactionType, double> generateInsights() {
+    Map<TransactionType, double> insights = {
+      TransactionType.food: 0,
+      TransactionType.personal: 0,
+      TransactionType.utility: 0,
+      TransactionType.transportation: 0,
+      TransactionType.health: 0,
+      TransactionType.leisure: 0,
+      TransactionType.other: 0,
+    };
+
+    for (Trans trans in transactions) {
+      if (trans.transType != null) {
+        insights[trans.transType] = insights[trans.transType]! + trans.amount;
+      }
+    }
+    return insights;
   }
 
   void scorchedEarth() {
@@ -156,8 +176,7 @@ class TransList {
         transactionDate: DateTime.parse(
             dbTrans['transactionDate']), // PLEASE SAVE IT AS ISO 8601
         amount: dbTrans['amount'],
-        transType: stringToTransType(dbTrans['transType']
-            .toLowerCase()), // TODO: get the transaction type from the database
+        transType: stringToTransType(dbTrans['transType'].toLowerCase()),
       ));
     }
   }
@@ -190,6 +209,11 @@ class DailyTransList {
   @override
   String toString() {
     return 'DailyTransList{transactions: $transactions}';
+  }
+
+  DateTime getDate() {
+    // get the date of the transactions. UI guys, u know what 2 do
+    return transactions[0].transactionDate;
   }
 
   void addTransaction(Trans transaction) {
@@ -227,9 +251,36 @@ class Trans {
     return 'Transaction{transName: $transName, transactionDate: $transactionDate, amount: $amount}';
   }
 
-  void generateCategory() {
-    // TODO: make it so that it gets the category from the firebase database
-    transType = TransactionType.other; // for now, it's just other
+  void generateCategory() async {
+    await firebaseDB.collection("vendors").get().then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        if (transName.contains(doc["name"])) {
+          Map<String, int> categories = doc["votes"];
+          // sort it, get the string with the most int, and set it as the category
+          // if there's a tie, set it as one of the categories. the user can change it later
+          // which is pretty much what comes first in the sorted list
+
+          final sortedCategories = categories.entries.toList() // java moment
+            ..sort((a, b) => a.value.compareTo(b.value));
+          transType = stringToTransType(sortedCategories.last.key);
+        }
+      }
+    });
+  }
+
+  void voteCategory(String category) async {
+    // if the user changes the category, make sure to save their vote too!
+    await firebaseDB.collection("vendors").get().then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        if (transName.contains(doc["name"])) {
+          Map<String, int> categories = doc["votes"];
+          categories.update(category, (value) => value + 1,
+              ifAbsent: () => 1); // if the category doesn't exist, create it
+          doc.reference
+              .update({'votes': categories}); // if broke, tell me. i'll fix it
+        }
+      }
+    });
   }
 
   void saveToDB() async {
@@ -237,8 +288,9 @@ class Trans {
     final db = LocalDB();
     await db.insertTransaction({
       'transName': transName,
-      'transactionDate': transactionDate.toIso8601String(),
-      'amount': amount,
+      'transactionDate': transactionDate.toIso8601String(), // HELL YEAH
+      'amount':
+          amount, // hopefully it saves as number. if breaks, make it so that it saves as REAL
       'transType': transTypeToString(transType),
     });
   }
@@ -249,6 +301,8 @@ class AppState extends ChangeNotifier {
   bool isDarkMode = false;
   LocalDB db = LocalDB(); // shove all of the database stuff here
   TransList transList = TransList();
+  List<DailyTransList> dailyTransLists = [];
+  List<ReceiptFile> receipts = [];
 
   void toggleAutomaticUpload() {
     isAutomaticUpload = !isAutomaticUpload;
