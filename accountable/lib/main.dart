@@ -1,3 +1,4 @@
+import 'package:accountable/pages/addTransaction.dart';
 import 'package:accountable/pages/file_upload_screen.dart';
 import 'package:accountable/pages/home_page.dart';
 import 'package:accountable/pages/summary_screen.dart';
