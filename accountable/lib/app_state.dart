@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart'; // PROVIDER REQUIRES MATERIAL???? WHY????
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // for the firebase stuff
-import 'firebase_options.dart'; // for the firebase stuff
+// import 'firebase_options.dart'; // for the firebase stuff
 
 FirebaseFirestore firebaseDB = FirebaseFirestore.instance;
 

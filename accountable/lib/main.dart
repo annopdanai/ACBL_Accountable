@@ -1,13 +1,13 @@
-import 'package:accountable/pages/file_upload_screen.dart';
-import 'package:accountable/pages/home_page.dart';
-import 'package:accountable/pages/summary_screen.dart';
-import 'package:accountable/pages/transaction_details_screen.dart';
+import 'package:accountable/presentation/pages/file_upload_screen.dart';
+import 'package:accountable/presentation/pages/home_page.dart';
+import 'package:accountable/presentation/pages/summary_screen.dart';
+import 'package:accountable/presentation/pages/transaction_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'firebase_options.dart';
+// import 'firebase_options.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
