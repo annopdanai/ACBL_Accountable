@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library to select Thai banking e-slip images for processing.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires camera access to capture Thai banking e-slip images for processing.</string>
 </dict>
 </plist>

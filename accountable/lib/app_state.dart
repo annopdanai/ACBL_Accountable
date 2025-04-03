@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'; // PROVIDER REQUIRES MATERIAL???? WHY???
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // for the firebase stuff
 import 'firebase_options.dart'; // for the firebase stuff
+import 'package:flutter_tesseract_ocr/flutter_tesseract_ocr.dart';
 
 FirebaseFirestore firebaseDB = FirebaseFirestore.instance;
 
@@ -314,9 +315,33 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void readReceipt(ReceiptFile receipt) {
-    // read the receipt and add the transactions to the transList
-    receipt.OCRBS();
+  void readReceipt(ReceiptFile receipt) async {
+    // Process the receipt with OCR and add transaction if successful
+    Map<String, dynamic> result = await receipt.OCRBS();
+    
+    // If OCR extracted valid data, create a transaction
+    if (result['recipient'] != null && result['amount'] != null) {
+      Trans transaction = Trans(
+        transName: result['recipient'],
+        transactionDate: DateTime.now(),
+        amount: result['amount'],
+      );
+      
+      // Add transaction to the list
+      transList.addTransaction(transaction);
+      
+      // Save to local database
+      await db.insertTransaction({
+        'transName': transaction.transName,
+        'transactionDate': transaction.transactionDate.toIso8601String(),
+        'transType': 'other', // Default type, will be categorized later
+        'amount': transaction.amount,
+      });
+      
+      // Try to categorize the transaction
+      transaction.generateCategory();
+    }
+    
     notifyListeners();
   }
 
@@ -337,6 +362,8 @@ class AppState extends ChangeNotifier {
 class ReceiptFile {
   final String name;
   final String path;
+  String? recipient;
+  double? amount;
 
   ReceiptFile({required this.name, required this.path})
       : assert(name != null),
@@ -347,8 +374,110 @@ class ReceiptFile {
     return 'ReceiptFile{name: $name, path: $path}';
   }
 
-  void OCRBS() {
-    //TODO: make it so that it actually reads the receipt
-    // return whatever it reads. maybe a singel transaction object?
+  Future<Map<String, dynamic>> OCRBS() async {
+    try {
+      // Extract text from the image using Tesseract OCR with Thai language support
+      String extractedText = await FlutterTesseractOcr.extractText(
+        path,
+        language: 'tha+eng', // Thai + English language pack
+        args: {
+          "preserve_interword_spaces": "1",
+        },
+      );
+      
+      // Parse the extracted text to find recipient and amount
+      Map<String, dynamic> extractedData = _parseThaiEslip(extractedText);
+      
+      // Save the extracted data
+      recipient = extractedData['recipient'];
+      amount = extractedData['amount'];
+      
+      return extractedData;
+    } catch (e) {
+      print('OCR Error: $e');
+      return {'error': e.toString()};
+    }
+  }
+  
+  Map<String, dynamic> _parseThaiEslip(String text) {
+    // Initialize result map
+    Map<String, dynamic> result = {
+      'recipient': null,
+      'amount': null,
+    };
+    
+    // Split text into lines for processing
+    List<String> lines = text.split('\n');
+    
+    // Process each line
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i].trim();
+      
+      // Check for recipient indicators in Thai banking slips
+      if (line.contains('ไปยัง') || line.contains('โอนเงินให้') || 
+          line.contains('ผู้รับเงิน') || line.contains('ชื่อบัญชีปลายทาง') ||
+          line.contains('ไปถึง') || line.contains('โอนไปยัง')) {
+        // Recipient is typically on the next line or in the same line after the indicator
+        if (i + 1 < lines.length && lines[i + 1].isNotEmpty) {
+          result['recipient'] = lines[i + 1].trim();
+        } else if (line.contains(':')) {
+          result['recipient'] = line.split(':').last.trim();
+        }
+      }
+      
+      // Specific patterns for Krungthai Bank
+      if (line.contains('นาย') || line.contains('นางสาว') || line.contains('นาง')) {
+        if (result['recipient'] == null) {
+          result['recipient'] = line.trim();
+        }
+      }
+      
+      // Specific patterns for SCB Bank format
+      if (line.contains('จาก') && i + 2 < lines.length && lines[i + 2].contains('ไปยัง')) {
+        if (i + 3 < lines.length) {
+          result['recipient'] = lines[i + 3].trim();
+        }
+      }
+      
+      // Look for MS or MR prefix which often indicates recipient name
+      if ((line.startsWith('MS') || line.startsWith('MR') || 
+           line.contains('MS ') || line.contains('MR ')) && 
+           result['recipient'] == null) {
+        result['recipient'] = line.trim();
+      }
+      
+      // Check for amount indicators
+      if (line.contains('จำนวนเงิน') || line.contains('จำนวน') || 
+          line.contains('ยอดเงิน') || line.contains('amount') ||
+          line.contains('บาท') || line.contains('THB')) {
+        // Extract amount pattern (Thai baht format)
+        RegExp amountRegex = RegExp(r'([0-9,]+\.[0-9]{2})');
+        Match? match = amountRegex.firstMatch(line);
+        
+        if (match != null) {
+          String amountStr = match.group(1)!.replaceAll(',', '');
+          result['amount'] = double.tryParse(amountStr);
+        } else if (i + 1 < lines.length) {
+          // Try next line if amount is on a separate line
+          String nextLine = lines[i + 1].trim();
+          Match? nextMatch = RegExp(r'([0-9,]+\.[0-9]{2})').firstMatch(nextLine);
+          if (nextMatch != null) {
+            String amountStr = nextMatch.group(1)!.replaceAll(',', '');
+            result['amount'] = double.tryParse(amountStr);
+          }
+        }
+      }
+      
+      // Direct amount pattern search (if not found above)
+      if (result['amount'] == null) {
+        Match? amountMatch = RegExp(r'([0-9,]+\.[0-9]{2})').firstMatch(line);
+        if (amountMatch != null) {
+          String amountStr = amountMatch.group(1)!.replaceAll(',', '');
+          result['amount'] = double.tryParse(amountStr);
+        }
+      }
+    }
+    
+    return result;
   }
 }
